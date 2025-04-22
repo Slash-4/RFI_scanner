@@ -1,0 +1,14 @@
+[Unit]
+Description=Automatic data collection daemon
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 /home/pi/rfi_scanner/pi_ctrl.py
+WorkingDirectory=/home/pi/rfi_scanner/
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=pi
+
+[Install]
+WantedBy=multi-user.target
