@@ -1,0 +1,11 @@
+{
+    "f_low": 400000.0,
+    "f_high": 1600000.0,
+    "rbw": 600000.0,
+    "points": 2000,
+    "verbose": 0,
+    "calibration_file": "gain_cal.csv",
+    "storage_file": "storage.dat",
+    "pinout": "pi",
+    "baudrate": 115200
+}
