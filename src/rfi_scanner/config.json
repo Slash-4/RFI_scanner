@@ -5,7 +5,7 @@
     "points": 2000,
     "verbose": 0,
     "calibration_file": "./config/gain_cal.csv",
-    "scan_dir": "./scans/",
+    "scan_dir": "scans",
     "pinout": "pi",
     "baudrate": 115200
 }
