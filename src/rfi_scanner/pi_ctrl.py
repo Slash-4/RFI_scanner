@@ -5,6 +5,8 @@ import sys
 import serial
 from serial.tools import list_ports
 from datetime import datetime
+from pathlib import Path
+
 import struct
 import argparse
 import copy
@@ -31,7 +33,8 @@ import matplotlib.pyplot as plt
     
 # }
 
-config_file = "config.json"
+pwd  = Path(__file__).parent
+config_file = f"{pwd}/config.json"
 
 #raspberry pi pin out
 green =  17
@@ -134,14 +137,11 @@ def gain_calibration( freq, dBm_power, calibration_file=None, verbose=0, **kwarg
     data  = np.loadtxt(calibration_file, delimiter=",", skiprows=1)
     
     freq_cal    = data[:, 1]
-    gain_values = data[:, 2]
+    gain_cal = data[:, 2]
 
     # Interpolate the gain values to match the frequency points
-    gain_values = np.array(gain_values)
-    freq_cal = gain_values[:, 0]
-    gain_cal = gain_values[:, 1]
 
-    dBm_power += np.interp(freq, freq_cal, gain_cal)
+    dBm_power -= np.interp(freq, freq_cal, gain_cal)
 
     return dBm_power
 
@@ -200,9 +200,9 @@ def check_level(freq, power, verbose=0, **kwargs):
     else:
         return "LOW"
 
-def save_to_file(powers, freqs, scan_id, filename, directory="./", **kwargs):
+def save_to_file(powers, freqs, scan_id, filename, scan_dir="./", **kwargs):
 
-    file_path = directory + filename
+    file_path = f"{pwd}/{scan_dir}/{filename}"
 
     write_header = not os.path.exists(file_path)
 
@@ -263,7 +263,7 @@ def main():
 
             state = check_level(freq, dBm_power, **loaded_config)
             
-            print(state)
+            #print(state, np.max(dBm_power))
             set_pins(state, **loaded_config)
             scan_id += 1
 
@@ -276,5 +276,4 @@ def main():
         
 if __name__ == "__main__":
     main()
-
 

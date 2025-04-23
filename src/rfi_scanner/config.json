@@ -1,0 +1,11 @@
+{
+    "f_low": 400.0E6,
+    "f_high": 1600.0E6,
+    "rbw": 600000.0,
+    "points": 2000,
+    "verbose": 0,
+    "calibration_file": "./config/gain_cal.csv",
+    "scan_dir": "./scans/",
+    "pinout": "pi",
+    "baudrate": 115200
+}

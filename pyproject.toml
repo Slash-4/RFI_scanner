@@ -9,6 +9,9 @@ dynamic = ["version"]
 dependencies = [
     "time",
     "os",
+    "h5py",
+    "rpi-lgpio",
+    "pyserial",
     "sys",
     "numpy>=1.21.0",
     "matplotlib>=3.4.0",
@@ -19,6 +22,4 @@ dependencies = [
 [tool.setuptools_scm]
 
 
-[project.optional-dependencies]
-pi4 = ["RPi.GPIO>=0.7.0",]
-test = 
+ 
