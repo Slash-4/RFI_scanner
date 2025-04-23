@@ -5,8 +5,10 @@ This repository contains the firmware and software for the RFI scanner, an radio
 
 #  Getting Started
 
-Follow these steps to get the service running a Rapberry pi 4/5, this assumes that the Raspberry pi has an network access in order to download the required packages.
-If the pi is connected over USB to a TinySA spectrum analyzer the script can be launched immediately if not it can still be lauched but it will fail quietly in the background until it is plugged
+Follow these steps to get the service running a Raspberry pi 4/5, this assumes that the Raspberry pi has an network access in order to download the required packages.
+If the pi is connected over USB to a TinySA spectrum analyzer the script can be launched immediately if not it can still be lauched but it will fail quietly in the background until it is plugged.
+The python script is lauched as a service on boot, it will monitor the TinySA and store the scans in the scan directory. Right now the script is set to store every single scan, but this will be updated soon. 
+
 
 
 ## 1. Clone the Repository
