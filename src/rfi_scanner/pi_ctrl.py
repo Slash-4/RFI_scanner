@@ -77,6 +77,23 @@ def getport() -> str:
 
 # return 1D numpy array with power as dBm
 def get_tinysa_dBm( s_port, f_low=F_LOW, f_high=F_HIGH, points=POINTS, rbw=0, verbose=None, **kwargs):
+    """
+    Input:
+    s_port: serial port of the tinySA
+    f_low: lower frequency limit
+    f_high: upper frequency limit
+    points: number of points to sample
+    rbw: resolution bandwidth
+    verbose: verbosity level
+
+    Output:
+    freq: frequency array
+    dBm_power: dBm power array
+    
+    This function communicates with the tinySA device over serial to get the dBm power values.
+
+    """
+
     with serial.Serial( port=s_port, baudrate=115200 ) as tinySA:
         tinySA.timeout = 1
         while tinySA.inWaiting():
@@ -113,7 +130,7 @@ def get_tinysa_dBm( s_port, f_low=F_LOW, f_high=F_HIGH, points=POINTS, rbw=0, ve
         #tinySA.write( 'rbw auto\r'.encode() ) # switch to auto RBW for faster tinySA screen update
 
     
-          
+    #one small problem is that if points exceeds 2000 the tinySA can time out before sending the data.
     raw_data = struct.unpack( '<' + 'xH'*points, raw_data[:-5] ) # ignore trailing '}ch> '
     raw_data = np.array( raw_data, dtype=np.uint16 )
     # tinySA:  SCALE = 128
@@ -126,6 +143,19 @@ def get_tinysa_dBm( s_port, f_low=F_LOW, f_high=F_HIGH, points=POINTS, rbw=0, ve
 
 
 def gain_calibration( freq, dBm_power, calibration_file=None, verbose=0, **kwargs):
+    """
+    Input: 
+    freq: frequency array
+    dBm_power: dBm power array
+    calibration_file: path to the calibration file
+    verbose: verbosity level
+
+    Output:
+    dBm_power: dBm power array after applying gain calibration
+
+    This function applies gain calibration to the dBm power values based on the provided calibration csv file.
+    
+    """
     if calibration_file is None:
         return dBm_power
 
@@ -148,6 +178,7 @@ def gain_calibration( freq, dBm_power, calibration_file=None, verbose=0, **kwarg
 
 
 def init_pins(pinout=None, **kwargs):
+    """Initialize the GPIO pins for the Raspberry Pi."""
     if pinout == "pi":
         global GPIO
         import RPi.GPIO as GPIO
@@ -162,6 +193,7 @@ def init_pins(pinout=None, **kwargs):
         GPIO.output(yellow, GPIO.LOW)
 
 def close_pins(pinout=None, **kwargs):
+    """Close the GPIO pins for the Raspberry Pi."""
     if pinout == "pi":
          GPIO.output(green,  GPIO.LOW)
          GPIO.output(red,    GPIO.LOW)
@@ -171,6 +203,8 @@ def close_pins(pinout=None, **kwargs):
 
 
 def set_pins(state, pinout=None, verbose=0, **kwargs):
+    """Set the GPIO pins based on the state."""
+
     if pinout == "pi":
         if state == "HIGH":
 
@@ -189,6 +223,22 @@ def set_pins(state, pinout=None, verbose=0, **kwargs):
 
 
 def check_level(freq, power, verbose=0, **kwargs):
+    """
+    Input:
+    freq: frequency array
+    power: dBm power array
+    verbose: verbosity level
+
+    Output:
+    "HIGH" if the maximum power is greater than -70 dBm, otherwise "LOW"
+    This function can be modified to use a more sophisticated evaluation method
+    
+
+    # Check if the maximum power is above -70 dBm
+    # Note: The threshold can be adjusted as needed
+
+    """
+
     if verbose > 0:
         print(np.max(power))
 
@@ -256,12 +306,15 @@ def main():
         
             freq, dBm_power = get_tinysa_dBm(portSA, **loaded_config)
             dBm_power = gain_calibration(freq, dBm_power, **loaded_config)
-
+            state = check_level(freq, dBm_power, **loaded_config)
 
             save_to_file(dBm_power,freq, scan_id, filename, **loaded_config)
             
-
-            state = check_level(freq, dBm_power, **loaded_config)
+            if loaded_config["verbose"] > 0:
+                print(f"Scan ID: {scan_id}")
+                print(f"Frequency: {freq}")
+                print(f"Power: {dBm_power}")
+                print(f"State: {state}")
             
             #print(state, np.max(dBm_power))
             set_pins(state, **loaded_config)
