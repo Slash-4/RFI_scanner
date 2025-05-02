@@ -15,7 +15,7 @@ In order to make a measurement there a two possible approaches, automatic or man
 The automatic approach will create a local systemctl process which will start up on power on. If it finds a connected TinySA it will start to request scans whithin the range specified in the config.json file. A new .csv will be generated for every power on labelled with the Raspberry Pi's time (this time is not necessarily real time unless the pi is connected to a network). 
 
 
-## 1. Clone the Repository
+# 1. Clone the Repository
 
 `bash
 git clone https://github.com/Slash-4/RFI_scanner.git
@@ -45,14 +45,14 @@ The service is called rfi_scanner.service
 ##Start/Stop service (for this boot)
 
 `bash
-sudo sytemctl start rfi_scanner.service
-sudo systemctl stop rfi_scanner.service
+sudo sytemctl start rfi_scanner.service;
+sudo systemctl stop rfi_scanner.service;
 `
 ##Enable/Disable service
 
 `bash
-sudo systemctl enable rfi_scanner.service
-sudo systemctl disable rfi_scanner.service
+sudo systemctl enable rfi_scanner.service;
+sudo systemctl disable rfi_scanner.service;
 `
 
 
