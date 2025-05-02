@@ -11,7 +11,8 @@ To use the warning light you can use the following pins
 <img src="https://github.com/user-attachments/assets/a8d17f1a-0a7d-46e0-b22b-34ccc905051e" width="500">
 
 In order to make a measurement there a two possible approaches, automatic or manual, both approaches assume that you are using a Raspberry Pi 4/5 with network access, at least for the duration of the installation.
-======================
+
+
 ## Automatic
 
 The automatic approach will create a local systemctl process which will start up on power on. If it finds a connected TinySA it will start to request scans whithin the range specified in the config.json file. A new .csv will be generated for every power on labelled with the Raspberry Pi's time (this time is not necessarily real time unless the pi is connected to a network). 
@@ -64,7 +65,7 @@ Live output log for debug
 ```bash
 sudo journalctl -u rfi_scanner.service -f
 ```
-================
+
 ## Manual 
 
 The manual approach allows you to run the python script by hand to make singleton measurements. One small risk with this approach
