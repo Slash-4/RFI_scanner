@@ -302,8 +302,9 @@ def save_to_db(dBm_power,freq, state, conn, cursor, verbose=0, **loaded_config):
     #.npy stores the shape and dtype of the array 
     buf = io.BytesIO()
     np.save(buf, data)
-    binary_data = buf.getvalue()
-    buf.close()
+    buf.seek(0)
+    binary_data = buf.read()
+    
     # Save the data to the database
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     cursor.execute('''
@@ -314,7 +315,7 @@ def save_to_db(dBm_power,freq, state, conn, cursor, verbose=0, **loaded_config):
 
     if verbose > 0:
         # Print the data to the console
-        print(f'Logged: {timestamp} -  state: {state} - data: {binary_data}')
+        print(f'Logged: {timestamp} -  state: {state} - data: {type(binary_data)} - {len(binary_data)} bytes')
 
     return 0
 
@@ -328,9 +329,9 @@ def main():
 
 
     #filename = datetime.now().strftime("%Y-%m-%d_%H.%M.%S.%f")[:-5]
-    #scan_id = 0
+    scan_id = 0
     
-    init_pins(**loaded_config)
+    #init_pins(**loaded_config)
     
     while True:
         try :
@@ -350,7 +351,7 @@ def main():
             #save_to_file(dBm_power,freq, scan_id, filename, **loaded_config)
             save_to_db(dBm_power,freq, state, conn, cursor, **loaded_config)
 
-            
+
             if loaded_config["verbose"] > 0:
                 print(f"Scan ID: {scan_id}")
                 print(f"Frequency: {freq}")
@@ -358,13 +359,13 @@ def main():
                 print(f"State: {state}")
             
             #print(state, np.max(dBm_power))
-            set_pins(state, **loaded_config)
+            #set_pins(state, **loaded_config)
             scan_id += 1
 
 
     except KeyboardInterrupt:
 
-            close_pins(**loaded_config)
+            #close_pins(**loaded_config)
             return 0 
         
         
