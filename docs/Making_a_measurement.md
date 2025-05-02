@@ -8,8 +8,71 @@ the their is LNA present will be inaccurate unless another calibration file is u
 ![schematics_rfi_scanner(1)](https://github.com/user-attachments/assets/843ec5f8-3f4c-4618-9ac8-7ecdee61c323)
 
 
-In order to make a measurement there a two possible approaches, automatic or manual. 
+In order to make a measurement there a two possible approaches, automatic or manual, both approaches assume that you are using a Raspberry Pi 4/5 with network access, at least for the duration of the installation.
 
 #Automatic
 
-The automatic measurement is launched using the setup script
+The automatic approach will create a local systemctl process which will start up on power on. If it finds a connected TinySA it will start to request scans whithin the range specified in the config.json file. A new .csv will be generated for every power on labelled with the Raspberry Pi's time (this time is not necessarily real time unless the pi is connected to a network). 
+
+
+## 1. Clone the Repository
+
+`bash
+git clone https://github.com/Slash-4/RFI_scanner.git
+`
+
+## 2. Navigate into the Project Directory
+
+`bash
+cd RFI_scanner
+`
+
+## 3. Make the Setup Script Executable
+
+`bash
+chmod +x setup.bash
+`
+
+## 4. Run the Setup Script
+
+`bash
+./setup.bash
+`
+
+The service is called rfi_scanner.service
+
+
+##Start/Stop service (for this boot)
+
+`bash
+sudo sytemctl start rfi_scanner.service
+sudo systemctl stop rfi_scanner.service
+`
+##Enable/Disable service
+
+`bash
+sudo systemctl enable rfi_scanner.service
+sudo systemctl disable rfi_scanner.service
+`
+
+
+##Stdout log 
+
+
+`bash
+sudo systemctl  rfi_scanner.service
+`
+
+Manual 
+
+The manual approach allows you to run the python script by hand to make singleton measurements. One small risk with this approach
+is the .venv setup. Notably, the pyserial package can cause some trouble due to shadowing of the package by other tools. A way to make sure it isn't overshadowed is to pip uninstall serial pyserial 
+
+## 1. Clone the Repository
+
+`bash
+git clone https://github.com/Slash-4/RFI_scanner.git
+cd RFI_scanner
+`
+
+
