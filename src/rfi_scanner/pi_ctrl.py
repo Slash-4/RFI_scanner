@@ -144,6 +144,8 @@ def get_tinysa_dBm( s_port, f_low=F_LOW, f_high=F_HIGH, points=POINTS, rbw=0, ve
     #one small problem is that if points exceeds 2000 the tinySA can time out before sending the data.
     raw_data = struct.unpack( '<' + 'xH'*points, raw_data[:-5] ) # ignore trailing '}ch> '
     raw_data = np.array( raw_data, dtype=np.uint16 )
+    
+    #The different models of tinySA send their data in a different format
     # tinySA:  SCALE = 128
     # tinySA4: SCALE = 174
     SCALE = 174
@@ -262,7 +264,7 @@ def check_level(freq, power, verbose=0, **kwargs):
         return "LOW"
 
 def save_to_file(powers, freqs, scan_id, filename, scan_dir="./", **kwargs):
-
+    """(OLD) Save the data to a CSV file."""
     file_path = f"{pwd}/{scan_dir}/{filename}"
 
     write_header = not os.path.exists(file_path)
@@ -326,9 +328,7 @@ def main():
     loaded_config = load_config(config_file)
     conn, cursor = db_setup(**loaded_config)
     
-
-
-    #filename = datetime.now().strftime("%Y-%m-%d_%H.%M.%S.%f")[:-5]
+    
     scan_id = 0
     
     #init_pins(**loaded_config)
