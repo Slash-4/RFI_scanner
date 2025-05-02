@@ -1,6 +1,8 @@
 import time
 import os
 import sys
+import io
+
 
 import serial
 from serial.tools import list_ports
@@ -40,6 +42,15 @@ config_file = f"{pwd}/config.json"
 green =  17
 yellow = 27
 red = 22
+
+
+import sqlite3
+import time
+from datetime import datetime
+
+
+
+
 
 def save_config(file_path, config):
     """Save the configuration to a JSON file."""
@@ -268,28 +279,56 @@ def save_to_file(powers, freqs, scan_id, filename, scan_dir="./", **kwargs):
         writer = csv.writer(f)
         writer.writerow([scan_id] + list(powers)) 
 
-       
+
+def db_setup(database_file, **kwargs):
+    """Setup the SQLite database."""
+    conn = sqlite3.connect(database_file, check_same_thread=False)
+    cursor = conn.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS sensor_data (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            timestamp TEXT NOT NULL,
+            data BLOB NOT NULL,
+            state TEXT
+        )
+    ''')
+    conn.commit()
+    return conn, cursor    
     
-    
+def save_to_db(dBm_power,freq, state, conn, cursor, verbose=0, **loaded_config):
+    data = np.array([freq, dBm_power], dtype=np.float32)
+
+    #Save data as a binary .npy file to store in BLOB 
+    #.npy stores the shape and dtype of the array 
+    buf = io.BytesIO()
+    np.save(buf, data)
+    binary_data = buf.getvalue()
+    buf.close()
+    # Save the data to the database
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    cursor.execute('''
+        INSERT INTO sensor_data (timestamp, data, state)
+        VALUES (?, ?, ?)
+    ''', (timestamp, binary_data, state))
+    conn.commit()
+
+    if verbose > 0:
+        # Print the data to the console
+        print(f'Logged: {timestamp} -  state: {state} - data: {binary_data}')
+
+    return 0
+
+
 
 
 def main():
     loaded_config = load_config(config_file)
+    conn, cursor = db_setup(**loaded_config)
     
-#    loaded_config = {     
-#    "f_low": 0.4E6,              # Example value in Hz
-#    "f_high": 2.4E6,             # Example value in Hz
-#    "rbw": 100E3,                  # Example value in Hz
-#    "points": 1000,              # Example number of points
-#    "verbose": 0,
-#    "read_mode": "maxhold",
-#    "calibration_file": "calibration.dat",  # Example calibration file path
-#    "storage_file": "storage.dat",          # Example storage file path
-#    "pinout": "pi",           # Example pinout configuration
-#    "baudrate": 115200,           # Example baudrate
-#    }
-    filename = datetime.now().strftime("%Y-%m-%d_%H.%M.%S.%f")[:-5]
-    scan_id = 0
+
+
+    #filename = datetime.now().strftime("%Y-%m-%d_%H.%M.%S.%f")[:-5]
+    #scan_id = 0
     
     init_pins(**loaded_config)
     
@@ -308,7 +347,9 @@ def main():
             dBm_power = gain_calibration(freq, dBm_power, **loaded_config)
             state = check_level(freq, dBm_power, **loaded_config)
 
-            save_to_file(dBm_power,freq, scan_id, filename, **loaded_config)
+            #save_to_file(dBm_power,freq, scan_id, filename, **loaded_config)
+            save_to_db(dBm_power,freq, state, conn, cursor, **loaded_config)
+
             
             if loaded_config["verbose"] > 0:
                 print(f"Scan ID: {scan_id}")
