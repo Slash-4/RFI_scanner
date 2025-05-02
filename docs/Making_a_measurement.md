@@ -17,51 +17,51 @@ The automatic approach will create a local systemctl process which will start up
 
 # 1. Clone the Repository
 
-`bash
+```bash
 git clone https://github.com/Slash-4/RFI_scanner.git
-`
+```
 
 ## 2. Navigate into the Project Directory
 
-`bash
+```bash
 cd RFI_scanner
-`
+```
 
 ## 3. Make the Setup Script Executable
 
-`bash
+```bash
 chmod +x setup.bash
-`
+```
 
 ## 4. Run the Setup Script
 
-`bash
+```bash
 ./setup.bash
-`
+```
 
 The service is called rfi_scanner.service
 
 
 ##Start/Stop service (for this boot)
 
-`bash
+```bash
 sudo sytemctl start rfi_scanner.service;
 sudo systemctl stop rfi_scanner.service;
-`
+```
 ##Enable/Disable service
 
-`bash
+```bash
 sudo systemctl enable rfi_scanner.service;
 sudo systemctl disable rfi_scanner.service;
-`
+```
 
 
 ##Stdout log 
 
 
-`bash
+```bash
 sudo systemctl  rfi_scanner.service
-`
+```
 
 Manual 
 
