@@ -15,11 +15,11 @@
 ```
 
 ### Params
-(float) f_low: Start frequency (Hz) 0-12E9 *note anything above 5Ghz is uncalibrated and has a "reduced linearity" warning
+(float) f_low: Start frequency in Hz. **Range**: 0-12E9 *note anything above 5Ghz is uncalibrated and has a "reduced linearity" warning
 
-(float) f_high: Stop frequency (Hz)  0-12E9 *note anything above 5Ghz is uncalibrated and has a "reduced linearity" warning
+(float) f_high: Stop frequency in Hz.  **Range**:0-12E9 *note anything above 5Ghz is uncalibrated and has a "reduced linearity" warning
 
-(float) rbw: Resolution bandwidth (Hz) (850, 600, 100, 30, 10, 3, 1, 0.2)*E3
+(float) rbw: Resolution bandwidth in Hz. (850E3, 600E3, 100E3, 30E3, 10E3, 3E3, 1E3, 0.2E3)
 
 (int) points: Number of points to sample, important the RBW and points can actually overlap or not cover the entire band if the 
 bandwith and rbw don't cover the entire frequency span, this can be a bit confusing 
