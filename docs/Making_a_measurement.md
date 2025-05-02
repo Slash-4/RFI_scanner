@@ -4,6 +4,8 @@ Before making any measurements a user should start by wiring together the RFI sc
 not indicated is the 5v supply to the LNA. You can still make a measurement without the LNA inline but the gain calibration assumes that the their is LNA present will be inaccurate unless another calibration file is used. 
 
 ![schematics_rfi_scanner(1)](https://github.com/user-attachments/assets/843ec5f8-3f4c-4618-9ac8-7ecdee61c323)
+<img src="https://github.com/user-attachments/assets/843ec5f8-3f4c-4618-9ac8-7ecdee61c323" width="200">
+
 
 To use the warning light you can use the following pins
 
