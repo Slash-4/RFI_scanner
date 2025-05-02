@@ -28,6 +28,6 @@ bandwith and rbw don't cover the entire frequency span, this can be a bit confus
 
 (str) **scan_dir**: Directory where scans are stored
 
-(str) **pinout**: Specifies which type of pins to actuate for the warning system, the behavior is a hardcode sequence called <pinout>,None actuates no pins (pi, None)
+(str) **pinout**: Specifies which type of pins to actuate for the warning system, the behavior is a hardcode sequence called \<pinout\>,None actuates no pins (pi, None)
 
 (int) **baudrate**: Baudrate between the raspberry pi and the TinySA, do not change (115200)
