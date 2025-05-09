@@ -13,6 +13,8 @@ To use the warning light you can use the following pins
 In order to make a measurement there a two possible approaches, automatic or manual, both approaches assume that you are using a Raspberry Pi 4/5 with network access, at least for the duration of the installation.
 
 
+Controlling the parameters for the scan is done through the config.json file details are in config.md.
+
 ## Automatic
 
 The automatic approach will create a local systemctl process which will start up on power on. If it finds a connected TinySA it will start to request scans whithin the range specified in the config.json file. A new .csv will be generated for every power on labelled with the Raspberry Pi's time (this time is not necessarily real time unless the pi is connected to a network). 
